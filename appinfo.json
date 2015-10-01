@@ -1,0 +1,23 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "rperryng",
+    "longName": "pebble-long-shadow-remake",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "pebble-long-shadow-remake",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "c8f4ea9a-8358-49be-8bfc-7e788c2fc353",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
