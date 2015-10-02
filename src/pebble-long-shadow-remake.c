@@ -1,10 +1,10 @@
 #include <pebble.h>
   
-#define CENTER GPoint(6, 50)
+#define CENTER GPoint(72, 84)
 
 static Window *s_main_window;
 static Layer *s_canvas_layer;
-static const uint8_t SHADOW_LENGTH = 94;
+static const uint8_t SHADOW_LENGTH = 126;
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   layer_mark_dirty(s_canvas_layer);
@@ -25,7 +25,7 @@ static char* get_hours_text() {
   return s_hours_buffer;
 }
 
-static int32_t get_minutes_angle() {
+static uint16_t get_minutes_angle() {
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
   
@@ -47,12 +47,14 @@ static void update_shadow(GContext *ctx) {
   
   for (int i = 0; i < SHADOW_LENGTH; i++) {
     uint8_t intermediate_length = SHADOW_LENGTH - i;
-    uint8_t shadow_x = (sin_lookup(minutes_angle) * intermediate_length / TRIG_MAX_RATIO) + CENTER.x;
-    uint8_t shadow_y = (-cos_lookup(minutes_angle) * intermediate_length / TRIG_MAX_RATIO) + CENTER.y;
-    text_frame = GRect(shadow_x, shadow_y, bounds.size.w, 60);
+    int16_t shadow_x = (sin_lookup(minutes_angle) * intermediate_length / TRIG_MAX_RATIO) + 8;
+    int16_t shadow_y = (-cos_lookup(minutes_angle) * intermediate_length / TRIG_MAX_RATIO) + 44;
+    text_frame = GRect(shadow_x, shadow_y, bounds.size.w, bounds.size.h);
     
     graphics_draw_text(ctx, text_hours, text_font, text_frame, GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
   }
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "frame x y: %d %d", text_frame.origin.x, text_frame.origin.y);
   
 #ifdef PBL_COLOR
   graphics_context_set_text_color(ctx, GColorWhite);
