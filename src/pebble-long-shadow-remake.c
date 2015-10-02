@@ -1,7 +1,6 @@
 #include <pebble.h>
 
 static Window *s_main_window;
-static TextLayer *s_hours_text_layer;
 static Layer *s_canvas_layer;
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -28,9 +27,9 @@ static void update_shadow(GContext *ctx) {
   char* text_hours = get_hours_text();
   
 #ifdef PBL_PLATFORM_BASALT
-  GFont text_font = fonts_load_custom_font(FONT_KEY_LECO_42_NUMBERS);
+  GFont text_font = fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS);
 #else
-  GFont text_font = fonts_load_custom_font(FONT_KEY_BITHAM_42_BOLD);
+  GFont text_font = fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD);
 #endif
   
 #ifdef PBL_COLOR
@@ -44,9 +43,14 @@ static void update_shadow(GContext *ctx) {
   
   for (int i = 0; i < SHADOW_LENGTH; i++) {
     // 144 x 168
-    text_frame = GRect(72 - i, 148 - i, bounds.size.w, 48);
+    text_frame = GRect(72 - i, 126 - i, bounds.size.w, bounds.size.h);
     graphics_draw_text(ctx, text_hours, text_font, text_frame, GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
   }
+  
+#ifdef PBL_COLOR
+  graphics_context_set_text_color(ctx, GColorWhite);
+#endif
+  graphics_draw_text(ctx, text_hours, text_font, text_frame, GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
 }
 
 static void canvas_update_proc(Layer *this_layer, GContext *ctx) {
@@ -56,13 +60,13 @@ static void canvas_update_proc(Layer *this_layer, GContext *ctx) {
 static void window_main_load(Window *window) {
   Layer *root_layer = window_get_root_layer(s_main_window);
   GRect window_bounds = layer_get_bounds(root_layer);
+  
   s_canvas_layer = layer_create(window_bounds);
   layer_set_update_proc(s_canvas_layer, canvas_update_proc);
   layer_add_child(root_layer, s_canvas_layer);
 }
 
 static void window_main_unload(Window *window) {
-  text_layer_destroy(s_hours_text_layer);
   layer_destroy(s_canvas_layer);
 }
 
