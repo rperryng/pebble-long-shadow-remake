@@ -7,7 +7,14 @@
     "longName": "pebble-long-shadow-remake",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "characterRegex": "[0-9]",
+                "file": "fonts/LECO_2014-Regular.ttf",
+                "name": "FONT_LECO_REGULAR_54",
+                "type": "font"
+            }
+        ]
     },
     "sdkVersion": "3",
     "shortName": "pebble-long-shadow-remake",
